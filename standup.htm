@@ -1,0 +1,162 @@
+<!doctype html>
+<html>
+  <head>
+
+    <style type="text/css">
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Helvetica;
+      }
+
+      .time {
+        position: relative;
+        width: 665px;
+        text-align: center;
+        margin: 200px auto;
+      }
+
+      .time .title {
+        position: absolute;
+        top: -12 0px;
+        height: 120px;
+        line-height: 80px;
+        text-align: center;
+        width: 100%;
+        color: #333;
+        font-size: 40px;
+        font-weight: 600;
+        text-shadow: 0px 2px 3px rgba(0, 0, 0, .2);
+      }
+
+      .section {
+        position: relative;
+        float: left;
+        height: 250px;
+        line-height: 250px;
+        width: 260px;
+        margin-right: 5px;
+        border-radius: 10px;
+        background: #111;
+        box-shadow: inset 0px 0px 20px rgba(255, 255, 255, .3);
+        font-size: 200px;
+        font-weight: 600;
+        color: #ccc;
+        text-shadow: 0px -2px 5px rgba(255, 255, 255, .2);
+      }
+
+      .section.single {
+        width: 130px;
+      }
+
+      .section .line {
+        position: absolute;
+        top: 129px;
+        height: 2px;
+        width: 100%;
+        background: #222;
+      }
+
+      .section .label {
+        position: absolute;
+        bottom: -50px;
+        height: 50px;
+        line-height: 50px;
+        left: 0px;
+        right: 0px;
+        text-align: center;
+        font-size: 40px;
+        font-weight: 500;
+        color: #111;
+        text-shadow: 0px 2px 3px rgba(0, 0, 0, .2);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="time">
+      <div class="title">Stand-up Timer</div>
+
+      <div class="section">
+        <span id="mins">00</span>
+        <div class="line"></div>
+        <div class="label">mins</div>
+      </div>
+      <div class="section">
+        <span id="secs">00</span>
+        <div class="line"></div>
+        <div class="label">secs</div>
+      </div>
+      <div class="section single">
+        <span id="ms">0</span>
+        <div class="line"></div>
+        <div class="label">ms</div>
+      </div>
+  </body>
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+  <script type="text/javascript">
+
+    var timer = 0;
+    var startTime = 0;
+    var started = false;
+    //hack
+    var ms = 0;
+
+    function resetTimer() {
+      startTime = new Date().getTime();
+    }
+
+    function startTimer() {
+      started = true;
+      timer = setInterval(updateTimer, 100);
+      if (startTime == 0) {
+        resetTimer();
+      }
+      updateTimer();
+      console.log('started');
+    }
+
+    function stopTimer() {
+      started = false;
+      clearInterval(timer);
+      console.log('stopped');
+    }
+
+    function updateTimer() {
+      var s = parseInt((new Date().getTime() - startTime) / 1000);
+      var m = parseInt(s/60);
+      s = s - m * 60;
+
+      if (m == 0) {
+        m = "00";
+      } else if (m < 10) {
+        m = "0" + m;
+      }
+
+      if (s < 10) {
+        s = "0" + s;
+      }
+
+      ms = (ms == 9) ? 0 : ms+1;
+
+      $("#ms").text(ms);
+      $("#mins").text(m);
+      $("#secs").text(s);
+
+    }
+
+    $(window).bind("keypress", function(e) {
+      console.log(e.keyCode);
+      if (e.keyCode == 32) {
+        if (started) {
+          stopTimer();
+        } else {
+          startTimer();
+        }
+      } else if (e.keyCode == 114) {
+        resetTimer();
+      }
+    });
+
+  </script>
+</html>
